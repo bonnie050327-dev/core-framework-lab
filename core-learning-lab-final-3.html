@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CORE Framework Learning Lab | AI Prompt Engineering</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #6D8196 0%, #4A4A4A 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: #6D8196;
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 3em;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+    
+    .header .subtitle {
+      font-size: 1.3em;
+      opacity: 0.95;
+      font-weight: 400;
+    }
+    
+    .content {
+      padding: 60px 40px;
+    }
+    
+    .learning-objectives {
+      background: #f8f9fa;
+      padding: 40px;
+      border-radius: 20px;
+      margin-bottom: 50px;
+    }
+    
+    .learning-objectives h2 {
+      color: #4A4A4A;
+      font-size: 2em;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    .learning-objectives-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+    
+    .learning-objective-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      border-left: 5px solid #6D8196;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .learning-objective-card h3 {
+      color: #6D8196;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+    
+    .learning-objective-card p {
+      color: #666;
+      line-height: 1.7;
+    }
+    
+    .assignment-section {
+      background: #f8f9fa;
+      padding: 40px;
+      border-radius: 20px;
+      margin-bottom: 40px;
+    }
+    
+    .assignment-section h2 {
+      color: #4A4A4A;
+      font-size: 2em;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .assignment-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      background: #6D8196;
+      color: white;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 1.3em;
+    }
+    
+    .assignment-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin-top: 20px;
+      border-left: 5px solid #6D8196;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .assignment-content h3 {
+      color: #4A4A4A;
+      margin-bottom: 15px;
+      font-size: 1.4em;
+    }
+    
+    .assignment-content p {
+      color: #666;
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
+    
+    .assignment-content ul, .assignment-content ol {
+      margin-left: 25px;
+      color: #666;
+      line-height: 1.9;
+    }
+    
+    .assignment-content li {
+      margin-bottom: 10px;
+    }
+    
+    .task-box {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 12px;
+      border-left: 4px solid #6D8196;
+      margin: 20px 0;
+    }
+    
+    .task-box h4 {
+      color: #4A4A4A;
+      margin-bottom: 12px;
+      font-size: 1.2em;
+    }
+    
+    .success-criteria {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      border-left: 4px solid #6D8196;
+      margin: 20px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .success-criteria h4 {
+      color: #4A4A4A;
+      margin-bottom: 12px;
+      font-size: 1.2em;
+    }
+    
+    .success-criteria ul {
+      list-style: none;
+      margin-left: 0;
+    }
+    
+    .success-criteria li:before {
+      content: "✓";
+      color: #4A4A4A;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    
+    .ai-assistant-section {
+      background: #CBCBCB;
+      color: #4A4A4A;
+      padding: 50px 40px;
+      border-radius: 20px;
+      text-align: center;
+      margin: 40px 0;
+    }
+    
+    .ai-assistant-section h2 {
+      color: #4A4A4A;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    
+    .ai-assistant-section p {
+      font-size: 1.3em;
+      line-height: 1.7;
+      margin-bottom: 15px;
+      color: #4A4A4A;
+    }
+    
+    .ai-assistant-section .instructions {
+      background: rgba(255, 255, 255, 0.6);
+      padding: 25px;
+      border-radius: 15px;
+      margin-top: 30px;
+      text-align: left;
+    }
+    
+    .ai-assistant-section .instructions h3 {
+      margin-bottom: 15px;
+      font-size: 1.4em;
+      color: #4A4A4A;
+    }
+    
+    .ai-assistant-section .instructions ol {
+      margin-left: 20px;
+      line-height: 2;
+      color: #4A4A4A;
+    }
+    
+    .reflection-section {
+      background: #f8f9fa;
+      padding: 40px;
+      border-radius: 20px;
+      margin: 40px 0;
+    }
+    
+    .reflection-section h2 {
+      color: #4A4A4A;
+      margin-bottom: 30px;
+      font-size: 2em;
+      text-align: center;
+    }
+    
+    .reflection-question {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      margin: 20px 0;
+      border-left: 5px solid #6D8196;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .reflection-question h4 {
+      color: #4A4A4A;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+    
+    .reflection-question p {
+      color: #666;
+      line-height: 1.8;
+    }
+    
+    .tips-section {
+      background: #f8f9fa;
+      padding: 40px;
+      border-radius: 20px;
+      margin: 40px 0;
+    }
+    
+    .tips-section h2 {
+      color: #4A4A4A;
+      margin-bottom: 25px;
+      font-size: 2em;
+    }
+    
+    .tip-card {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      border-left: 5px solid #6D8196;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .tip-card h3 {
+      color: #4A4A4A;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .tip-card p {
+      color: #666;
+      line-height: 1.8;
+    }
+    
+    .example-box {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95em;
+      border-left: 3px solid #6D8196;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+    }
+    
+    .footer {
+      background: #4A4A4A;
+      color: white;
+      text-align: center;
+      padding: 30px;
+    }
+    
+    /* Chat Widget Styles */
+    .chat-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      font-family: Arial, sans-serif;
+    }
+    
+    .chat-button {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #6D8196;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(109, 129, 150, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      font-size: 36px;
+      color: white;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 4px 20px rgba(109, 129, 150, 0.4);
+      }
+      50% {
+        box-shadow: 0 4px 30px rgba(109, 129, 150, 0.8);
+      }
+    }
+    
+    .chat-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 25px rgba(109, 129, 150, 0.6);
+    }
+    
+    .chat-container {
+      display: none;
+      width: 420px;
+      height: 650px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      overflow: hidden;
+      flex-direction: column;
+    }
+    
+    .chat-container.open {
+      display: flex;
+    }
+    
+    .chat-header {
+      background: #6D8196;
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .chat-header h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .close-button {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    
+    .close-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .chat-iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+    }
+    
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2em;
+      }
+      
+      .content {
+        padding: 30px 20px;
+      }
+      
+      .chat-container {
+        width: calc(100vw - 20px);
+        height: calc(100vh - 100px);
+      }
+      
+      .chat-button {
+        width: 60px;
+        height: 60px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    
+    <!-- Header -->
+    <div class="header">
+      <h1>CORE Framework Learning Lab</h1>
+      <p class="subtitle">Master AI Prompting Through Guided Discovery</p>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+      
+      <!-- Learning Objectives -->
+      <div class="learning-objectives">
+        <h2>What You'll Learn Today</h2>
+        
+        <div style="background: white; padding: 30px; border-radius: 15px; border-left: 5px solid #6D8196; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: 800px; margin: 0 auto;">
+          <p style="color: #4A4A4A; font-size: 1.1em; margin-bottom: 20px;">By the end of this session, you will be able to:</p>
+          <ul style="color: #666; line-height: 2; margin-left: 25px;">
+            <li>Identify the four elements of the CORE Framework for effective AI prompting</li>
+            <li>Explain why each element (Context, Output, Rules, Examples) improves AI responses</li>
+            <li>Apply the CORE Framework to create professional-quality prompts for real scenarios</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Assignment 1 -->
+      <div class="assignment-section">
+        <h2>
+          <span class="assignment-number">1</span>
+          Start Your Discovery Journey
+        </h2>
+        
+        <div class="assignment-content">
+          <h3>Launch the AI Assistant</h3>
+          <p>
+            Your first task is to begin your guided discovery journey with our AI assistant. 
+            This isn't a regular chatbot—it's specifically designed to help you DISCOVER 
+            the principles of effective prompting rather than just telling you about them.
+          </p>
+          
+          <div class="task-box">
+            <h4>Your Task:</h4>
+            <ol>
+              <li>Click the <strong>chat button</strong> in the bottom-right corner of your screen</li>
+              <li>Follow the instructions and complete ALL discovery stages</li>
+              <li><strong>Important:</strong> Don't skip ahead! Each stage builds on the previous one</li>
+              <li>Take your time to think through each question the AI asks you</li>
+            </ol>
+          </div>
+          
+          <p style="margin-top: 20px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #6D8196; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <strong>Learning Tip:</strong> The AI will ask you reflection questions. Take time to really think about 
+            these—they're designed to help you understand the "why" behind each element, not just the "what."
+          </p>
+        </div>
+      </div>
+      
+      <!-- AI Assistant Call-to-Action -->
+      <div class="ai-assistant-section">
+        <h2>Ready to Start?</h2>
+        <p>
+          Click the chat button in the bottom-right corner to begin your discovery journey!
+        </p>
+        <p style="font-size: 1.1em; margin-top: 25px;">
+          The AI assistant will guide you through interactive experiments where you'll discover 
+          each element of the CORE Framework by experiencing it firsthand.
+        </p>
+        
+        <div class="instructions">
+          <h3>What to Expect:</h3>
+          <ol>
+            <li><strong>Experiment:</strong> You'll try different prompts and see the results</li>
+            <li><strong>Reflect:</strong> You'll be asked to think about what worked and why</li>
+            <li><strong>Discover:</strong> You'll uncover each CORE element through your own exploration</li>
+            <li><strong>Learn:</strong> The AI will help you understand the principles behind effective prompting</li>
+          </ol>
+        </div>
+      </div>
+      
+      <!-- Checkpoint Section -->
+      <div style="background: white; padding: 60px 40px; border-radius: 20px; margin: 60px 0; border: 3px solid #6D8196; text-align: center;">
+        <h2 style="color: #4A4A4A; font-size: 2.5em; margin-bottom: 20px;">Checkpoint</h2>
+        <p style="color: #666; font-size: 1.3em; line-height: 1.8; max-width: 800px; margin: 0 auto 30px;">
+          Before moving forward, make sure you have completed the discovery journey with the AI assistant.
+        </p>
+        <div style="background: #f8f9fa; padding: 30px; border-radius: 15px; max-width: 700px; margin: 0 auto;">
+          <p style="color: #4A4A4A; font-size: 1.2em; font-weight: 600; margin-bottom: 20px;">
+            Have you finished learning all four CORE elements?
+          </p>
+          <ul style="list-style: none; margin: 0; padding: 0; color: #666; font-size: 1.1em; line-height: 2;">
+            <li>✓ Context: Setting the Stage</li>
+            <li>✓ Output: Defining Your Desired Result</li>
+            <li>✓ Rules: Setting Boundaries</li>
+            <li>✓ Examples: Showing the Standard</li>
+          </ul>
+          <p style="color: #666; font-size: 1.1em; margin-top: 30px; font-style: italic;">
+            If you have not completed the discovery journey, please scroll up and click the AI Assistant button to continue learning.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Assignment 2 -->
+      <div class="assignment-section">
+        <h2>
+          <span class="assignment-number">2</span>
+          Apply What You Learned
+        </h2>
+        
+        <div class="assignment-content">
+          <h3>Independent Practice</h3>
+          <p>
+            Now it's time to apply the CORE Framework to your real work.
+          </p>
+          
+          <div class="task-box">
+            <h4>Your Task:</h4>
+            <ol>
+              <li>Open your preferred AI tool (ChatGPT, Claude, Gemini, etc.)</li>
+              <li>Think of a task you normally use AI for at work or school</li>
+              <li>Write a prompt using ALL FOUR CORE elements (Context, Output, Rules, Examples)</li>
+              <li>Submit your prompt to the AI and review the response</li>
+            </ol>
+          </div>
+          
+          <div class="success-criteria">
+            <h4>Reflect on Your Results:</h4>
+            <ul>
+              <li>How was this response different from your usual prompts?</li>
+              <li>Which CORE element made the biggest improvement?</li>
+              <li>What will you do differently in your future prompts?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Reflection Section -->
+      <div class="reflection-section">
+        <h2>Reflection Questions</h2>
+        <p style="color: #4A4A4A; font-size: 1.1em; margin-bottom: 25px;">
+          After completing all assignments, reflect on your learning by answering these questions:
+        </p>
+        
+        <div class="reflection-question">
+          <h4>Question 1: Discovery Process</h4>
+          <p>
+            How did discovering the CORE elements through experimentation differ from just being 
+            told about them? Which approach helped you understand better, and why?
+          </p>
+        </div>
+        
+        <div class="reflection-question">
+          <h4>Question 2: Most Impactful Element</h4>
+          <p>
+            Which of the four CORE elements (Context, Output, Rules, Examples) had the biggest 
+            impact on improving your prompts? Explain why with a specific example.
+          </p>
+        </div>
+        
+        <div class="reflection-question">
+          <h4>Question 3: Real-World Application</h4>
+          <p>
+            Think about a situation in your work, school, or personal life where you could use 
+            AI assistance. Describe the situation and explain how you would apply the CORE Framework 
+            to get the best results.
+          </p>
+        </div>
+        
+        <div class="reflection-question">
+          <h4>Question 4: Common Mistakes</h4>
+          <p>
+            Based on your experiments, what do you think are the most common mistakes people make 
+            when prompting AI? How does the CORE Framework help avoid these mistakes?
+          </p>
+        </div>
+      </div>
+      
+      <!-- Tips Section -->
+      <div class="tips-section">
+        <h2>Pro Tips for Using CORE</h2>
+        
+        <div class="tip-card">
+          <h3>Tip 1: Start Small, Build Up</h3>
+          <p>
+            You don't always need all four CORE elements. Start with Context and Output (the essentials), 
+            then add Rules and Examples as needed for more control.
+          </p>
+          <div class="example-box">
+            Minimum viable prompt: Context + Output<br>
+            Professional prompt: All four CORE elements
+          </div>
+        </div>
+        
+        <div class="tip-card">
+          <h3>Tip 2: Create a CORE Template</h3>
+          <p>
+            Save time by creating templates for common tasks. Fill in the blanks each time you need 
+            that type of prompt.
+          </p>
+          <div class="example-box">
+            Email template:<br>
+            C: "You are [role] writing to [audience]..."<br>
+            O: "Write [length] email with [structure]..."<br>
+            R: "Use [tone], avoid [constraints]..."<br>
+            E: "Like this: [sample opening]..."
+          </div>
+        </div>
+        
+        <div class="tip-card">
+          <h3>Tip 3: Iterate and Refine</h3>
+          <p>
+            Your first CORE prompt won't always be perfect. Test it, see the results, then refine 
+            the elements that need improvement.
+          </p>
+        </div>
+        
+        <div class="tip-card">
+          <h3>Tip 4: Examples are Powerful</h3>
+          <p>
+            When you're struggling to describe the style you want, don't spend 10 minutes writing 
+            rules—just show a quick example instead. Examples often work better than lengthy descriptions.
+          </p>
+        </div>
+        
+        <div class="tip-card">
+          <h3>Tip 5: Teach Others</h3>
+          <p>
+            The best way to solidify your understanding of CORE is to teach it to someone else. 
+            Show a colleague how to improve their prompts using the framework.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Quick Reference -->
+      <div style="background: #f8f9fa; padding: 40px; border-radius: 20px; margin: 40px 0;">
+        <h2 style="color: #4A4A4A; margin-bottom: 30px; text-align: center;">CORE Framework Quick Reference</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+          <div style="background: white; padding: 30px; border-radius: 15px; border-left: 5px solid #6D8196; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <h3 style="color: #6D8196; margin-bottom: 15px; font-size: 1.5em;">C - Context</h3>
+            <p style="color: #666; line-height: 1.7; margin-bottom: 10px;"><strong>Setting the Stage</strong></p>
+            <p style="color: #666; line-height: 1.7;">Background, role, situation, and who you're addressing</p>
+          </div>
+          
+          <div style="background: white; padding: 30px; border-radius: 15px; border-left: 5px solid #6D8196; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <h3 style="color: #6D8196; margin-bottom: 15px; font-size: 1.5em;">O - Output</h3>
+            <p style="color: #666; line-height: 1.7; margin-bottom: 10px;"><strong>Defining the Result</strong></p>
+            <p style="color: #666; line-height: 1.7;">Format, length, structure, and organization</p>
+          </div>
+          
+          <div style="background: white; padding: 30px; border-radius: 15px; border-left: 5px solid #6D8196; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <h3 style="color: #6D8196; margin-bottom: 15px; font-size: 1.5em;">R - Rules</h3>
+            <p style="color: #666; line-height: 1.7; margin-bottom: 10px;"><strong>Setting Boundaries</strong></p>
+            <p style="color: #666; line-height: 1.7;">Tone, constraints, what to avoid, and guidelines</p>
+          </div>
+          
+          <div style="background: white; padding: 30px; border-radius: 15px; border-left: 5px solid #6D8196; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <h3 style="color: #6D8196; margin-bottom: 15px; font-size: 1.5em;">E - Examples</h3>
+            <p style="color: #666; line-height: 1.7; margin-bottom: 10px;"><strong>Showing the Standard</strong></p>
+            <p style="color: #666; line-height: 1.7;">Sample phrases, style demonstrations, and models</p>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <p style="font-size: 1.1em;">CORE Framework Learning Lab</p>
+      <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.8;">
+        Master AI Prompting Through Guided Discovery
+      </p>
+    </div>
+  </div>
+  
+  <!-- Collapsible Chat Widget -->
+  <div class="chat-widget">
+    <button class="chat-button" id="chatButton" onclick="toggleChat()" title="Start Your Discovery Journey!">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C11.4477 2 11 2.44772 11 3V4H8C6.34315 4 5 5.34315 5 7V18C5 19.6569 6.34315 21 8 21H16C17.6569 21 19 19.6569 19 18V7C19 5.34315 17.6569 4 16 4H13V3C13 2.44772 12.5523 2 12 2Z" fill="white"/>
+        <circle cx="9" cy="10" r="1.5" fill="#6D8196"/>
+        <circle cx="15" cy="10" r="1.5" fill="#6D8196"/>
+        <path d="M9 14C9 14 10 16 12 16C14 16 15 14 15 14" stroke="#6D8196" stroke-width="1.5" stroke-linecap="round"/>
+        <rect x="11" y="17" width="2" height="2" rx="1" fill="#6D8196"/>
+      </svg>
+    </button>
+    
+    <div class="chat-container" id="chatContainer">
+      <div class="chat-header">
+        <h3>AI Discovery Assistant</h3>
+        <button class="close-button" onclick="toggleChat()">✕</button>
+      </div>
+      <iframe 
+        class="chat-iframe"
+        src="https://creator.voiceflow.com/share/698cb4b15e7add7039e9e46a/production" 
+        allow="microphone">
+      </iframe>
+    </div>
+  </div>
+  
+  <script>
+    function toggleChat() {
+      const container = document.getElementById('chatContainer');
+      const button = document.getElementById('chatButton');
+      
+      if (container.classList.contains('open')) {
+        container.classList.remove('open');
+        button.style.display = 'flex';
+      } else {
+        container.classList.add('open');
+        button.style.display = 'none';
+      }
+    }
+  </script>
+  
+</body>
+</html>
